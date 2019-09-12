@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="normalize.css">
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<title>N-Jin's UNIX Time counter</title>
+</head>
+<body>
+<h1 id="h1unix"></h1>
+<h2>Time</h2>
+<p id="time"></p>
+<h2>DECIMAL</h2>
+<p id="decimalframe"></p>
+<p id="decimalepochtime"></p>
+<p id="decimalbackground"></p>
+<p id="decimalframe"></p>
+<br/><br/><br/><br/><br/>
+<h2>BINARY</h2>
+<p id="binaryepochtime">xd</p>
+<h2>The End of UNIX Time (32-Bit)</h2>
+<p id="deadline"></p>
+<h2>Your Worldline</h2>
+<p id="worldlineframe"></p>
+<p id="worldline"></p>
+<p id="worldlinebackground"></p>
+<p id="credits">Powered by <a href="https://n-jin.eu/">N-Jin</a></p>
+<p id="otherbit">Go to <a href="./epoch64.html">64-Bit</a> UNIX Time Version</p>
+<script type="text/javascript">
+
+	var epochtime;
+	var time;
+	var binary;
+	var utctime;
+	var deadline 			= document.getElementById('deadline');
+	var currenttime 		= document.getElementById('time');
+	var binaryepochtime 	= document.getElementById('binaryepochtime');
+	var decimalepochtime 	= document.getElementById('decimalepochtime');
+	var decimalbackground 	= document.getElementById('decimalbackground');
+	var decimalframe 		= document.getElementById('decimalframe');
+	var h1unix 				= document.getElementById('h1unix');
+	var worldline 			= document.getElementById('worldline');
+	var worldlinebackground = document.getElementById('worldlinebackground');
+	var worldlineframe 		= document.getElementById('worldlineframe');
+	var timer 				= document.getElementById('timer');
+	var t = 0;
+	var timeout = 10;
+	var startTime			= new Date().getTime();
+	var divergencemeter 	= setInterval(f_worldline,1);
+	var worldline_number;
+	
+	unixtime();
+	deadline.innerHTML =  new Date(2147483647*1000).toUTCString().substr(0,26) + "UTC";
+	h1unix.innerHTML = "UNIX Time since epoch - 32bit - (" + new Date(0).toUTCString().substr(0,26) + "UTC)";
+
+	//setInterval(worldline,1000);
+	setInterval(unixtime, 1000);
+
+	// Functions //
+	String.prototype.replaceAt=function(index, replacement) {
+    return this.substr(0, index) + replacement+ this.substr(index + replacement.length);
+	}
+	function unixtime() {
+		time 						= new Date();
+		// utctime 					= new Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds());
+		epochtime 					= Math.floor(new Date().getTime()/1000|0);
+		binary 						= ("00000000000000000000000000000000" + epochtime.toString(2)).substr(-32);
+		binaryepochtime.innerHTML 	= binary;
+		decimalepochtime.innerHTML 	= epochtime;
+		decimalbackground.innerHTML = epochtime;
+		decimalframe.innerHTML 		= epochtime;
+		currenttime.innerHTML		= time.toUTCString().substr(0,26) + "UTC";
+	}
+
+	function f_worldline() {
+		worldline.innerHTML = worldlineframe.innerHTML = worldlinebackground.innerHTML = getRandomArbitrary(-1,10);
+		worldline_number = worldline.innerHTML.substr(0,8);
+		if (worldline.innerHTML < 0) {
+			worldline.innerHTML = worldlineframe.innerHTML = worldlinebackground.innerHTML = worldline.innerHTML.replace("-0.","&nbsp;&bull;").substr(0,18);
+		}
+		else {
+			worldline.innerHTML = worldlineframe.innerHTML = worldlinebackground.innerHTML = worldline.innerHTML.replace(".","&bull;").substr(0,13);
+		}
+
+		if (new Date().getTime() - startTime > 2000) {
+			clearInterval(divergencemeter);
+		}
+	}
+	function randomIntFromInterval(min,max){
+		return Math.floor(Math.random()*(max-min+1)+min);
+	}
+	function getRandomArbitrary(min, max) {
+  return Math.random() * (max - min) + min;
+}
+</script>
+</body>
+</html>
